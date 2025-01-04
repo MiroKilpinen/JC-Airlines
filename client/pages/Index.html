@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../styles/Index.css" />
+    <title>JC-Airlines</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../javascripts/script.js"></script>
+  </head>
+
+  <body>
+    <div class="flex-container">
+      <header>
+        <h1>JC-Airlines</h1>
+        <nav>
+          <input
+            type="button"
+            class="navButton"
+            onclick="window.location='AboutUs.html';"
+            value="Tietoa Meistä"
+          />
+          <input
+            type="button"
+            class="navButton"
+            onclick="window.location='Equipment.html';"
+            value="Kalusto"
+          />
+          <input
+            type="button"
+            class="navButton"
+            onclick="window.location='ContactUs.html';"
+            value="Yhteystiedot"
+          />
+        </nav>
+      </header>
+      <main>
+        <form class="form" action="process_form.php" method="POST">
+          <label for="date">Lähtöpäivä</label>
+          <input type="date" id="date" name="date" />
+          <label for="countrySelect">Maa</label>
+          <select id="countrySelect" name="country" required>
+            <option value=""></option>
+          </select>
+          <label for="citySelect">Kaupunki</label>
+          <select id="citySelect" name="city" required>
+            <option value=""></option>
+          </select>
+          <label for="timeSelect">Lennon ajankohta</label>
+          <select id="timeSelect" name="time" required>
+            <option value=""></option>
+          </select>
+          <label for="liput">Matkustajien määrä:</label>
+          <input type="number" />
+          <button
+            type="button"
+            id="continueButton"
+            onclick="addPassengerInfoInputs()"
+          >
+            Jatka
+          </button>
+        </form>
+      </main>
+      <footer>
+        <p>&copy; JC-Airlines 2024.</p>
+      </footer>
+    </div>
+  </body>
+</html>
