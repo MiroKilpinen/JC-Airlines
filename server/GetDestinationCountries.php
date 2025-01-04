@@ -16,7 +16,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$query = "SELECT DISTINCT Kohdemaa FROM flights ORDER BY Kohdemaa";
+$query = "SELECT DISTINCT Kohdemaa FROM lennot ORDER BY Kohdemaa";
 $result = $conn->query($query);
 
 $countries = [];
@@ -28,4 +28,3 @@ while ($row = $result->fetch_assoc()) {
 echo json_encode($countries);
 
 $conn->close();
-?>

@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 $city = $_GET['city'];
 
 // Query to get distinct flight times for the selected city
-$sql = "SELECT DISTINCT Aika FROM flights WHERE Kaupunki = ?";
+$sql = "SELECT DISTINCT Aika FROM lennot WHERE Kaupunki = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $city);
 $stmt->execute();

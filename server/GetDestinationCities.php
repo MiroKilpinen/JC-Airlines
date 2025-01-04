@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 $country = $_GET['country'];
 
 // Query to fetch cities based on the selected country
-$query = "SELECT DISTINCT Kaupunki FROM flights WHERE Kohdemaa = ? ORDER BY Kaupunki";
+$query = "SELECT DISTINCT Kaupunki FROM lennot WHERE Kohdemaa = ? ORDER BY Kaupunki";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $country);
 $stmt->execute();
