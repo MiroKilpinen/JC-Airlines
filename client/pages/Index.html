@@ -36,25 +36,26 @@
       <main>
         <form class="form" action="process_form.php" method="POST">
           <label for="date">Lähtöpäivä</label>
-          <input type="date" id="date" name="date" />
+          <input type="date" id="date" name="date" required/>
           <label for="countrySelect">Maa:</label>
           <select id="countrySelect" name="country" required>
             <option value=""></option>
           </select>
           <label for="citySelect">Kaupunki:</label>
-          <select id="citySelect" name="city" required>
+          <select id="citySelect" name="city" required disabled>
             <option value=""></option>
           </select>
           <label for="timeSelect">Lennon ajankohta:</label>
-          <select id="timeSelect" name="time" required>
+          <select id="timeSelect" name="time" required disabled>
             <option value=""></option>
           </select>
-          <label for="liput">Matkustajien määrä:</label>
-          <input type="number" />
+          <label for="PassengerAmount">Matkustajien määrä:</label>
+          <input type="number" id="PassengerAmount" name="passengerAmount" required/>
           <button
             type="button"
             id="continueButton"
             onclick="addPassengerInfoInputs()"
+            disabled
           >
             Jatka
           </button>
