@@ -1,84 +1,72 @@
-$(document).ready(function () {
-  const countrySelect = $("#countrySelect");
-  const citySelect = $("#citySelect");
-  const timeSelect = $("#timeSelect");
+document.addEventListener("DOMContentLoaded", function () {
+  const countrySelect = document.getElementById("countrySelect");
+  const citySelect = document.getElementById("citySelect");
+  const timeSelect = document.getElementById("timeSelect");
 
   // Fetch countries and populate the country dropdown
-  $.ajax({
-    url: "/JC-Airlines/server/GetDestinationCountries.php",
-    method: "GET",
-    success: function (data) {
-      const countries = JSON.parse(data);
-      // Populate the country dropdown
+  fetch("/JC-Airlines/server/GetDestinationCountries.php")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((countries) => {
       countries.forEach((country) => {
-        countrySelect.append(new Option(country, country));
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        countrySelect.appendChild(option);
       });
-    },
-    error: function (err) {
-      console.log("Error fetching countries:", err);
-    },
-  });
+    })
+    .catch((err) => console.error("Error fetching countries:", err));
 
   // When a country is selected, fetch and update cities
-  countrySelect.change(function () {
-    const selectedCountry = $(this).val();
+  countrySelect.addEventListener("change", function () {
+    const selectedCountry = countrySelect.value;
 
     // Reset city and time selects
-    citySelect.empty().append('<option value=""></option>');
-    timeSelect.empty().append('<option value=""></option>');
+    citySelect.innerHTML = '<option value=""></option>';
+    timeSelect.innerHTML = '<option value=""></option>';
 
     if (selectedCountry) {
-      $.ajax({
-        url: "/JC-Airlines/server/GetDestinationCities.php",
-        method: "GET",
-        data: { country: selectedCountry },
-        success: function (data) {
-          try {
-            const cities = JSON.parse(data);
-
-            // Populate city dropdown with cities from the selected country
-            cities.forEach((city) => {
-              citySelect.append(new Option(city, city));
-            });
-          } catch (err) {
-            console.error("Error parsing cities data:", err);
-          }
-        },
-        error: function (err) {
-          console.log("Error fetching cities:", err);
-        },
-      });
+      fetch(`/JC-Airlines/server/GetDestinationCities.php?country=${encodeURIComponent(selectedCountry)}`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+        .then((cities) => {
+          cities.forEach((city) => {
+            const option = document.createElement("option");
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+          });
+        })
+        .catch((err) => console.error("Error fetching cities:", err));
     }
   });
 
   // When a city is selected, fetch and update times
-  citySelect.change(function () {
-    const selectedCity = $(this).val();
+  citySelect.addEventListener("change", function () {
+    const selectedCity = citySelect.value;
 
     // Reset time select
-    timeSelect.empty().append('<option value=""></option>');
+    timeSelect.innerHTML = '<option value=""></option>';
 
     if (selectedCity) {
-      $.ajax({
-        url: "/JC-Airlines/server/GetFlightTimes.php",
-        method: "GET",
-        data: { city: selectedCity },
-        success: function (data) {
-          try {
-            const times = JSON.parse(data);
-
-            // Populate time dropdown with available times for the selected city
-            times.forEach((time) => {
-              timeSelect.append(new Option(time, time));
-            });
-          } catch (err) {
-            console.error("Error parsing times data:", err);
-          }
-        },
-        error: function (err) {
-          console.log("Error fetching times:", err);
-        },
-      });
+      fetch(`/JC-Airlines/server/GetFlightTimes.php?city=${encodeURIComponent(selectedCity)}`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+        .then((times) => {
+          times.forEach((time) => {
+            const option = document.createElement("option");
+            option.value = time;
+            option.textContent = time;
+            timeSelect.appendChild(option);
+          });
+        })
+        .catch((err) => console.error("Error fetching times:", err));
     }
   });
 });

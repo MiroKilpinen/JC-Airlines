@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);  // Show all errors
-ini_set('display_errors', 1);  // Display errors on the page
-
 // Database connection settings
 $servername = "localhost";
 $username = "root";
@@ -17,14 +14,16 @@ if ($conn->connect_error) {
 }
 
 $query = "SELECT DISTINCT Kohdemaa FROM lennot ORDER BY Kohdemaa";
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $countries = [];
 while ($row = $result->fetch_assoc()) {
     $countries[] = $row['Kohdemaa'];
 }
 
-// Return the result as JSON
 echo json_encode($countries);
 
 $conn->close();
+?>
