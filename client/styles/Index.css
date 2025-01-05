@@ -1,6 +1,7 @@
 body {
   min-height: 100vh;
   margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -80,12 +81,15 @@ label {
   font-size: 1.1rem;
 }
 
+
 input[type="text"],
 input[type="number"],
 input[type="date"],
 input[type="email"],
 input[type="phone"],
-select {
+select,
+#availableSeats,
+#ticketCost {
   margin: 5px 0;
   width: 50%;
   padding: 8px;
@@ -180,7 +184,9 @@ footer {
   input[type="date"],
   input[type="email"],
   input[type="tel"],
-  select {
+  select,
+  #availableSeats,
+  #ticketCost {
     width: 100%;
   }
 

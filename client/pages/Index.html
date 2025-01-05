@@ -49,8 +49,12 @@
           <select id="timeSelect" name="time" required disabled>
             <option value=""></option>
           </select>
-          <label for="PassengerAmount">Matkustajien määrä:</label>
-          <input type="number" id="PassengerAmount" name="passengerAmount" required/>
+          <label for="availableSeats">Vapaiden paikkojen määrä:</label>
+          <div id="availableSeats">--</div>
+          <label for="ticketCost">Lipun hinta:</label>
+          <div id="ticketCost">--</div>
+          <label for="ticketAmount">Lippujen määrä:</label>
+          <input type="number" id="ticketAmount" name="ticketAmount" required/>
           <button
             type="button"
             id="continueButton"
