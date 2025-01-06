@@ -12,7 +12,6 @@ if ($conn->connect_error) {
 
 $city = $_GET['city'];
 
-// SQL query to get flight times and plane types
 $sql = "SELECT DISTINCT Aika, Kone FROM lennot WHERE Kaupunki = ? ORDER BY Aika, Kone";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $city);
@@ -21,7 +20,6 @@ $result = $stmt->get_result();
 
 $timesWithPlanes = [];
 while ($row = $result->fetch_assoc()) {
-    // Format the response as "Aamu, Q400"
     $formattedString = $row['Aika'] . ", " . $row['Kone'];
     $timesWithPlanes[] = $formattedString;
 }

@@ -100,7 +100,7 @@ select,
 }
 
 button {
-  margin: 10px 0;
+  margin: 5px;
   width: 150px;
   padding: 10px;
   border: none;
@@ -127,6 +127,7 @@ button:hover {
 
 footer {
   display: flex;
+  max-height: 50px;
   min-height: 50px;
   background-color: white;
   color: black;
@@ -183,7 +184,7 @@ footer {
   input[type="number"],
   input[type="date"],
   input[type="email"],
-  input[type="tel"],
+  input[type="phone"],
   select,
   #availableSeats,
   #ticketCost {

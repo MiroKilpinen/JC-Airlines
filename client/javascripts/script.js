@@ -20,7 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const ticketValue = ticketAmount.value.trim();
 
     // If all required fields are filled, enable jatka button
-    if (dateValue && countryValue && cityValue && timeValue && ticketValue && parseInt(ticketValue) > 0) {
+    if (
+      dateValue &&
+      countryValue &&
+      cityValue &&
+      timeValue &&
+      ticketValue &&
+      parseInt(ticketValue) > 0
+    ) {
       continueButton.disabled = false;
     } else {
       continueButton.disabled = true;
@@ -59,7 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
     checkFormValidity();
 
     if (selectedCountry) {
-      fetch(`/JC-Airlines/server/GetDestinationCities.php?country=${encodeURIComponent(selectedCountry)}`)
+      fetch(
+        `/JC-Airlines/server/GetDestinationCities.php?country=${encodeURIComponent(
+          selectedCountry
+        )}`
+      )
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
@@ -79,17 +90,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   citySelect.addEventListener("change", function () {
     const selectedCity = citySelect.value;
-  
+
     timeSelect.innerHTML = '<option value=""></option>';
     timeSelect.disabled = true;
-  
+
     availableSeatsElement.textContent = "--";
     ticketCostElement.textContent = "--";
-  
+
     checkFormValidity();
-  
+
     if (selectedCity) {
-      fetch(`/JC-Airlines/server/GetFlightTimes.php?city=${encodeURIComponent(selectedCity)}`)
+      fetch(
+        `/JC-Airlines/server/GetFlightTimes.php?city=${encodeURIComponent(
+          selectedCity
+        )}`
+      )
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
@@ -111,9 +126,13 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateAvailableSeatsAndCost() {
     const city = citySelect.value;
     const selectedTime = timeSelect.value;
-  
+
     if (city && selectedTime) {
-      fetch(`/JC-Airlines/server/GetFlightDetails.php?city=${encodeURIComponent(city)}&time=${encodeURIComponent(selectedTime)}`)
+      fetch(
+        `/JC-Airlines/server/GetFlightDetails.php?city=${encodeURIComponent(
+          city
+        )}&time=${encodeURIComponent(selectedTime)}`
+      )
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
@@ -138,12 +157,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // When the date input changes, check if all fields are filled
   dateInput.addEventListener("input", checkFormValidity);
 
-  ticketAmount.addEventListener("input", function() {
+  ticketAmount.addEventListener("input", function () {
     // Limit the ticketAmount to availableSeats
     const ticketValue = parseInt(ticketAmount.value);
     if (ticketValue > availableSeats) {
       ticketAmount.value = availableSeats; // Reset the value to availableSeats if the user exceeds it
-      alert(`Lippujen määrä ei voi ylittää vapaiden paikkojen määrää (${availableSeats}).`);
+      alert(
+        `Lippujen määrä ei voi ylittää vapaiden paikkojen määrää (${availableSeats}).`
+      );
     }
     checkFormValidity();
   });
@@ -156,19 +177,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Update both available seats and ticket cost when city or time is selected
   citySelect.addEventListener("change", updateAvailableSeatsAndCost);
   timeSelect.addEventListener("change", updateAvailableSeatsAndCost);
-
 });
 
 // Function to dynamically add passenger information fields
 function addPassengerInfoInputs() {
   const form = document.querySelector(".form");
-
   const passengerInfoDiv = document.createElement("div");
   passengerInfoDiv.classList.add("passengerInfo-container");
 
   const fields = [
-    { label: "Etunimi:", type: "text", name: "firstName" },
-    { label: "Sukunimi:", type: "text", name: "lastName" },
+    { label: "Nimi:", type: "text", name: "name" },
     { label: "Osoite:", type: "text", name: "address" },
     { label: "Sähköposti:", type: "email", name: "email" },
     { label: "Puhelinnumero:", type: "phone", name: "phone" },
@@ -182,6 +200,7 @@ function addPassengerInfoInputs() {
     const input = document.createElement("input");
     input.type = field.type;
     input.name = field.name;
+    input.required = true;
 
     passengerInfoDiv.appendChild(label);
     passengerInfoDiv.appendChild(input);
@@ -198,7 +217,85 @@ function addPassengerInfoInputs() {
     continueButton.style.display = "block";
   });
 
+  const buyButton = document.createElement("button");
+  buyButton.type = "button";
+  buyButton.textContent = "Osta";
+  buyButton.classList.add("buy-button");
+
+  buyButton.addEventListener("click", () => {
+    const date = form.querySelector('input[name="date"]').value.trim();
+    const country = countrySelect.value.trim();
+    const city = citySelect.value.trim();
+    const timeAndPlane = timeSelect.value.trim();
+    const tickets = ticketAmount.value.trim();
+    const name = passengerInfoDiv
+      .querySelector('input[name="name"]')
+      .value.trim();
+    const address = passengerInfoDiv
+      .querySelector('input[name="address"]')
+      .value.trim();
+    const email = passengerInfoDiv
+      .querySelector('input[name="email"]')
+      .value.trim();
+    const phone = passengerInfoDiv
+      .querySelector('input[name="phone"]')
+      .value.trim();
+
+    if (
+      !date ||
+      !country ||
+      !city ||
+      !timeAndPlane ||
+      !tickets ||
+      !name ||
+      !address ||
+      !email ||
+      !phone
+    ) {
+      alert("Täytä kaikki kentät!");
+      return;
+    }
+
+    fetch("/JC-Airlines/server/SaveOrder.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date,
+        country,
+        city,
+        timeAndPlane,
+        availableSeats,
+        tickets,
+        name,
+        address,
+        email,
+        phone,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Virhe tilauksen tallentamisessa.");
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          alert("Tilaus tallennettu onnistuneesti!");
+          form.querySelector('input[name="date"]').value = "";
+          ticketAmount.value = "";
+          location.reload();
+        } else {
+          alert("Virhe: " + data.error);
+        }
+      })
+      .catch((err) => {
+        console.error("Error saving order:", err);
+        alert("Virhe tilauksen tallentamisessa.");
+      });
+  });
+
   passengerInfoDiv.appendChild(backButton);
+  passengerInfoDiv.appendChild(buyButton);
 
   form.insertBefore(
     passengerInfoDiv,
